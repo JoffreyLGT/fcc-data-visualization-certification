@@ -1,3 +1,23 @@
+.bar {
+  fill: steelblue;
+  opacity: 0.8;
+}
+
+.bar:hover {
+  fill: coral;
+  opacity: 1;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 10;
+  visibility: hidden;
+  background: #f9f6f2;
+  padding: 6px;
+  border: 1px solid #032535;
+  border-radius: 6px;
+}
+
 body {
   font-family: sans-serif;
 }
