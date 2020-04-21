@@ -1,12 +1,12 @@
-import "./styles.css";
 import * as d3 from "d3";
+import "./styles.css";
 
 // Fetch the data from server
 fetch(
   "https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json"
 )
-  .then(response => response.json())
-  .then(data => {
+  .then((response) => response.json())
+  .then((data) => {
     displayGraph(data);
   });
 
@@ -15,10 +15,16 @@ const height = 300;
 const margin = { top: 20, right: 20, bottom: 20, left: 40 };
 
 function displayGraph(data) {
+  const tooltip = d3
+    .select("#app")
+    .append("div")
+    .attr("id", "tooltip")
+    .attr("class", "tooltip");
+
   let svg = d3
     .select("#app")
     .append("svg")
-    .attr("viewBox", `0 0 ${width} ${height}`);
+    .attr("viewBox", [0, 0, width, height]);
 
   svg
     .append("text")
@@ -30,18 +36,14 @@ function displayGraph(data) {
 
   // Create the ranges
   const xRange = [
-    d3.min(data.data, data => new Date(data[0]).getFullYear()),
-    d3.max(data.data, data => new Date(data[0]).getFullYear())
+    d3.min(data.data, (data) => new Date(data[0])),
+    d3.max(data.data, (data) => new Date(data[0])),
   ];
-  const yRange = [
-    d3.min(data.data, data => Math.trunc(data[1])),
-    d3.max(data.data, data => Math.trunc(data[1]))
-  ];
+  const yRange = [0, d3.max(data.data, (data) => Math.trunc(data[1]))];
 
   // Create the scales
-
   const xScale = d3
-    .scaleLinear()
+    .scaleTime()
     .domain(xRange)
     .range([margin.left, width - margin.right]);
 
@@ -55,7 +57,7 @@ function displayGraph(data) {
     .append("g")
     .attr("id", "x-axis")
     .attr("transform", `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(xScale).tickFormat(d3.format("d")));
+    .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y")));
 
   svg // y
     .append("g")
@@ -63,7 +65,7 @@ function displayGraph(data) {
     .attr("transform", `translate(${margin.left},0)`)
     .call(d3.axisLeft(yScale).tickFormat(d3.format("d")));
 
-  const rectWidth = (width - margin.left) / data.data.length;
+  const barWidth = (width - margin.left - margin.right) / data.data.length;
 
   svg
     .selectAll("rect")
@@ -71,13 +73,21 @@ function displayGraph(data) {
     .enter()
     .append("rect")
     .attr("class", "bar")
-    .attr("x", (d, i) => {
-      const value = i * rectWidth + margin.left;
-      return value;
+    .attr("x", (d, i) => xScale(new Date(d[0])))
+    .attr("y", (d, i) => yScale(d[1]))
+    .attr("width", (d, i) => barWidth)
+    .attr("height", (d, i) => yScale(yRange[0]) - yScale(d[1]))
+    .attr("data-date", (d) => d[0])
+    .attr("data-gdp", (d) => d[1])
+    .on("mouseover", (d) => {
+      tooltip.text(d[0]);
+      tooltip.attr("data-date", d[0]);
+      tooltip.style("visibility", "visible");
     })
-    .attr("y", (d, i) => height - (height - yScale(d[1])))
-    .attr("width", rectWidth)
-    .attr("height", (d, i) => height - yScale(d[1]) - margin.bottom);
+    .on("mousemove", () => {
+      tooltip
+        .style("top", d3.event.pageY - 10 + "px")
+        .style("left", d3.event.pageX + 10 + "px");
+    })
+    .on("mouseout", () => tooltip.style("visibility", "hidden"));
 }
-
-// <text x="20" y="35" class="small">My</text>
