@@ -12,7 +12,10 @@
   position: absolute;
   z-index: 10;
   visibility: hidden;
-  background: white;
+  background: #f9f6f2;
+  padding: 6px;
+  border: 1px solid #032535;
+  border-radius: 6px;
 }
 
 body {
