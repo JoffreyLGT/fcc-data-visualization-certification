@@ -18,6 +18,20 @@
   border-radius: 6px;
 }
 
+.dot {
+  stroke: darkblue;
+  stroke-width: 0.5;
+  opacity: 0.7;
+}
+
+.dot-doping {
+  fill: cornflowerblue;
+}
+
+.dot-no-doping {
+  fill: orange;
+}
+
 body {
   font-family: sans-serif;
 }

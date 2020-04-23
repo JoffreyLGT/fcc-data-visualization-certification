@@ -77,6 +77,20 @@ const drawGraph = (data) => {
   drawXAxis(svg.append("g"), xScale);
   drawYAxis(svg.append("g"), yScale);
 
+  svg
+    .append("g")
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("cx", (d) => xScale(d.Year))
+    .attr("cy", (d) => yScale(d.Seconds))
+    .attr("r", "3")
+    .attr("data-xvalue", (d) => d.Year)
+    .attr("data-yvalue", (d) => d.seconds)
+    .attr("class", (d) =>
+      d.Doping.length > 0 ? "dot dot-doping" : "dot dot-no-doping"
+    );
 };
 
 export const displayScatterplotGraph = () => {
