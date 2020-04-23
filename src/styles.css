@@ -32,6 +32,23 @@
   fill: orange;
 }
 
+.tick {
+  font-size: 0.5em;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.domain {
+  stroke: #000;
+  shape-rendering: crispEdges;
+  fill: none;
+}
+
+.container {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 body {
   font-family: sans-serif;
 }
