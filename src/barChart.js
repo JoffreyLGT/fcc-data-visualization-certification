@@ -33,7 +33,7 @@ const drawXAxis = (g, xScale) =>
     .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y")));
 
 /**
- * Draw the y axis to the bottom and add the ticks.
+ * Draw the y axis to the left and add the ticks.
  * @param {*} g container
  * @param {*} yScale to calculate the positions
  */
