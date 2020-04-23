@@ -4,12 +4,12 @@ import "./styles.css";
 const title = "Doping in Professional Bicycle Racing";
 
 const canvas = {
-  width: 500,
+  width: 450,
   height: 250,
 };
 
 const margin = {
-  top: 20,
+  top: 40,
   right: 10,
   bottom: 20,
   left: 40,
@@ -32,7 +32,7 @@ const drawTitle = (g) => {
   g.append("text")
     .attr("id", "title")
     .attr("x", canvas.width / 2)
-    .attr("y", margin.top)
+    .attr("y", 20)
     .attr("text-anchor", "middle")
     .text(title);
 };
@@ -52,7 +52,7 @@ const drawYAxis = (g, yScale) => {
 const drawGraph = (data) => {
   console.log(data);
 
-  const xRange = [d3.min(data, (d) => d.Year), d3.max(data, (d) => d.Year)];
+  const xRange = [d3.min(data, (d) => d.Year) - 1, d3.max(data, (d) => d.Year)];
   const yRange = [
     d3.min(data, (d) => d.Seconds),
     d3.max(data, (d) => d.Seconds),
@@ -66,7 +66,7 @@ const drawGraph = (data) => {
   const yScale = d3
     .scaleLinear()
     .domain(yRange)
-    .range([canvas.height - margin.bottom, margin.top]);
+    .range([margin.top, canvas.height - margin.bottom]);
 
   const svg = d3
     .select("#scatterplotChart")
@@ -76,6 +76,7 @@ const drawGraph = (data) => {
   drawTitle(svg.append("g"));
   drawXAxis(svg.append("g"), xScale);
   drawYAxis(svg.append("g"), yScale);
+
 };
 
 export const displayScatterplotGraph = () => {
