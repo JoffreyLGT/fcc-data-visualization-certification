@@ -41,6 +41,25 @@ const timeToISODate = (time) => {
   return date.toISOString();
 };
 
+/**
+ * Create the tooltip div inside and append it to the main div.
+ * It has an absolute value and will be positionned next to the
+ * cursor on top of the chart.
+ */
+const createTooltip = () => {
+  return d3
+    .select("#scatterplotChart")
+    .append("div")
+    .attr("id", "tooltip")
+    .attr("class", "tooltip");
+};
+
+const addTextToTooltip = (tooltip, data) => {
+  tooltip.html(`${data.Name} - ${data.Nationality}<br />
+  Year: ${data.Year}, Time:${data.Time}<br /><br />
+  ${data.Doping}`);
+};
+
 const drawTitle = (g) => {
   g.append("text")
     .attr("id", "title")
@@ -105,6 +124,8 @@ const drawLegend = (g) => {
 const drawGraph = (data) => {
   console.log(data);
 
+  const tooltip = createTooltip();
+
   const xRange = [
     d3.min(data, (d) => d.Year) - 1,
     d3.max(data, (d) => d.Year) + 1,
@@ -147,7 +168,21 @@ const drawGraph = (data) => {
     .attr("data-yvalue", (d) => timeToISODate(d.Time))
     .attr("class", (d) =>
       d.Doping.length > 0 ? "dot dot-doping" : "dot dot-no-doping"
-    );
+    )
+    // As explained next to the tooltip creation, we have to set
+    // the div coordinates to have them next to the cursor and
+    // hide it when we mouse out.
+    .on("mouseover", (d) => {
+      addTextToTooltip(tooltip, d);
+      tooltip.attr("data-year", d.Year);
+      tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", () => {
+      tooltip
+        .style("top", d3.event.pageY - 10 + "px")
+        .style("left", d3.event.pageX + 10 + "px");
+    })
+    .on("mouseout", () => tooltip.style("visibility", "hidden"));
 };
 
 export const displayScatterplotGraph = () => {
