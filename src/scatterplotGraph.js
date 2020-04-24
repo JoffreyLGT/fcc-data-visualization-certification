@@ -52,10 +52,13 @@ const drawYAxis = (g, yScale) => {
 const drawGraph = (data) => {
   console.log(data);
 
-  const xRange = [d3.min(data, (d) => d.Year) - 1, d3.max(data, (d) => d.Year)];
+  const xRange = [
+    d3.min(data, (d) => d.Year) - 1,
+    d3.max(data, (d) => d.Year) + 1,
+  ];
   const yRange = [
-    d3.min(data, (d) => d.Seconds),
-    d3.max(data, (d) => d.Seconds),
+    d3.min(data, (d) => d.Seconds) - 10,
+    d3.max(data, (d) => d.Seconds) + 10,
   ];
   console.log(yRange);
   const xScale = d3
