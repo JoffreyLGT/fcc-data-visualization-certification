@@ -47,6 +47,14 @@
   font-size: 0.3em;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+.legend-rect-doping {
+  @extend .dot;
+  @extend .dot-doping;
+}
+.legend-rect-no-doping {
+  @extend .dot;
+  @extend .dot-no-doping;
+}
 
 .container {
   max-width: 1000px;

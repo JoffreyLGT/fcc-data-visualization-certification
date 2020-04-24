@@ -27,6 +27,20 @@ const secondsToMinsSeconds = (totalSeconds) => {
     .padStart(2, "0")}`;
 };
 
+/**
+ * Convert a string containing time to a string containing
+ * a date with ISO format.
+ * ex: 20:00 returns 2020-04-24T05:20:00.123Z
+ * @param {string} time with format 20:00
+ */
+const timeToISODate = (time) => {
+  const splittedTime = time.split(":");
+  const date = new Date();
+  date.setMinutes(splittedTime[0]);
+  date.setSeconds(splittedTime[1]);
+  return date.toISOString();
+};
+
 const drawTitle = (g) => {
   g.append("text")
     .attr("id", "title")
@@ -78,14 +92,14 @@ const drawLegend = (g) => {
     .attr("y", y - (rectSize - 1))
     .attr("width", rectSize)
     .attr("height", rectSize)
-    .attr("class", "dot-no-doping");
+    .attr("class", "legend-rect-no-doping");
 
   g.append("rect")
     .attr("x", x)
     .attr("y", y + padding.y - (rectSize - 1))
     .attr("width", rectSize)
     .attr("height", rectSize)
-    .attr("class", "dot-doping");
+    .attr("class", "legend-rect-doping");
 };
 
 const drawGraph = (data) => {
@@ -130,7 +144,7 @@ const drawGraph = (data) => {
     .attr("cy", (d) => yScale(d.Seconds))
     .attr("r", "3")
     .attr("data-xvalue", (d) => d.Year)
-    .attr("data-yvalue", (d) => d.Seconds)
+    .attr("data-yvalue", (d) => timeToISODate(d.Time))
     .attr("class", (d) =>
       d.Doping.length > 0 ? "dot dot-doping" : "dot dot-no-doping"
     );
