@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import "./styles.css";
 
 const canvas = {
   width: 500,

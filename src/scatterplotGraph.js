@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import "./styles.css";
 
 const title = "Doping in Professional Bicycle Racing";
 
@@ -79,14 +78,14 @@ const drawLegend = (g) => {
     .attr("y", y - (rectSize - 1))
     .attr("width", rectSize)
     .attr("height", rectSize)
-    .attr("class", "dot dot-no-doping");
+    .attr("class", "dot-no-doping");
 
   g.append("rect")
     .attr("x", x)
     .attr("y", y + padding.y - (rectSize - 1))
     .attr("width", rectSize)
     .attr("height", rectSize)
-    .attr("class", "dot dot-doping");
+    .attr("class", "dot-doping");
 };
 
 const drawGraph = (data) => {
@@ -131,7 +130,7 @@ const drawGraph = (data) => {
     .attr("cy", (d) => yScale(d.Seconds))
     .attr("r", "3")
     .attr("data-xvalue", (d) => d.Year)
-    .attr("data-yvalue", (d) => d.seconds)
+    .attr("data-yvalue", (d) => d.Seconds)
     .attr("class", (d) =>
       d.Doping.length > 0 ? "dot dot-doping" : "dot dot-no-doping"
     );
