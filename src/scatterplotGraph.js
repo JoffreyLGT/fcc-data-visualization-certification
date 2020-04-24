@@ -49,6 +49,46 @@ const drawYAxis = (g, yScale) => {
     .call(d3.axisLeft(yScale).tickFormat(secondsToMinsSeconds));
 };
 
+const drawLegend = (g) => {
+  const x = canvas.width - margin.right;
+  const y = (canvas.height - margin.top) / 2;
+
+  const padding = {
+    x: 5,
+    y: 10,
+  };
+  const rectSize = 7;
+
+  g.attr("id", "legend")
+    .append("text")
+    .text("No doping allegations")
+    .attr("x", x - padding.x)
+    .attr("y", y)
+    .attr("class", "legend")
+    .attr("text-anchor", "end");
+
+  g.append("text")
+    .text("With doping allegations")
+    .attr("x", x - padding.x)
+    .attr("y", y + padding.y)
+    .attr("class", "legend")
+    .attr("text-anchor", "end");
+
+  g.append("rect")
+    .attr("x", x)
+    .attr("y", y - (rectSize - 1))
+    .attr("width", rectSize)
+    .attr("height", rectSize)
+    .attr("class", "dot dot-no-doping");
+
+  g.append("rect")
+    .attr("x", x)
+    .attr("y", y + padding.y - (rectSize - 1))
+    .attr("width", rectSize)
+    .attr("height", rectSize)
+    .attr("class", "dot dot-doping");
+};
+
 const drawGraph = (data) => {
   console.log(data);
 
@@ -79,6 +119,7 @@ const drawGraph = (data) => {
   drawTitle(svg.append("g"));
   drawXAxis(svg.append("g"), xScale);
   drawYAxis(svg.append("g"), yScale);
+  drawLegend(svg.append("g"));
 
   svg
     .append("g")

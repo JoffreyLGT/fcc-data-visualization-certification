@@ -21,15 +21,15 @@
 .dot {
   stroke: darkblue;
   stroke-width: 0.5;
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .dot-doping {
-  fill: cornflowerblue;
+  fill: rgb(0, 68, 196);
 }
 
 .dot-no-doping {
-  fill: orange;
+  fill: rgb(255, 136, 0);
 }
 
 .tick {
@@ -41,6 +41,11 @@
   stroke: #000;
   shape-rendering: crispEdges;
   fill: none;
+}
+
+.legend {
+  font-size: 0.3em;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container {
