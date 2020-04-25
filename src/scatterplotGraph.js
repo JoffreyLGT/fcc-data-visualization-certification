@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import "../styles.scss";
 
 const title = "Doping in Professional Bicycle Racing";
 
