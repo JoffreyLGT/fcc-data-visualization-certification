@@ -2,10 +2,10 @@ import "./styles.scss";
 import { displayBarChart } from "./barChart";
 import { displayScatterplotGraph } from "./scatterplotGraph";
 
-const routes = [
-  [0, "/"],
-  [1, "/barChart"],
-  [2, "/scatterplotGraph"],
+const projects = [
+  [0, "all"],
+  [1, "barChart"],
+  [2, "scatterplotGraph"],
 ];
 
 const removeGraphContainerContent = () => {
@@ -43,13 +43,16 @@ const displayGraph = (id) => {
 
 const onGraphSelected = (evt) => {
   const value = Number(evt.target.value);
-  const newPathname = routes.find((route) => route[0] === value);
-  console.log(newPathname);
+  const newPathname = projects.find((route) => route[0] === value);
   if (typeof newPathname === "undefined") {
-    history.pushState(undefined, undefined, "/");
+    history.pushState(undefined, undefined, `${location.pathname}?project=all`);
     displayGraph(0);
   } else {
-    history.pushState(undefined, undefined, newPathname[1]);
+    history.pushState(
+      undefined,
+      undefined,
+      `${location.pathname}?project=${newPathname[1]}`
+    );
     displayGraph(value);
     return;
   }
@@ -59,12 +62,15 @@ const onGraphSelected = (evt) => {
 window.addEventListener("DOMContentLoaded", () => {
   const selector = document.getElementById("chartSelector");
   selector.addEventListener("change", onGraphSelected);
-  const route = routes.find((route) => route[1] === location.pathname);
-  if (typeof route === "undefined") {
+
+  const projectQuery = new URLSearchParams(location.search).get("project");
+  const project = projects.find((route) => route[1] === projectQuery);
+  if (typeof project === "undefined") {
+    history.pushState(undefined, undefined, `${location.pathname}?project=all`);
     selector.value = "0";
     displayGraph();
   } else {
-    selector.value = route[0].toString();
-    displayGraph(route[0]);
+    selector.value = project[0].toString();
+    displayGraph(project[0]);
   }
 });
