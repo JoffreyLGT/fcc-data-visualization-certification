@@ -192,5 +192,3 @@ export const displayScatterplotGraph = () => {
     .then((response) => response.json())
     .then((data) => drawGraph(data));
 };
-
-displayScatterplotGraph();
