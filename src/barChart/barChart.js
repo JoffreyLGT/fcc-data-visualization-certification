@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import "../styles.scss";
 
 const canvas = {
   width: 500,
@@ -134,3 +135,5 @@ export const displayBarChart = () => {
       drawChart(data);
     });
 };
+
+displayBarChart();
