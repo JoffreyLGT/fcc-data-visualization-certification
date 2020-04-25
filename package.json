@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build index.html --out-dir docs/ --public-url /docs/"
+    "build": "parcel build index.html --out-dir docs/ --public-url /fcc-data-visualization-certification/"
   },
   "dependencies": {
     "d3": "5.15.1"
