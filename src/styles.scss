@@ -1,0 +1,77 @@
+.bar {
+  fill: steelblue;
+  opacity: 0.8;
+}
+
+.bar:hover {
+  fill: coral;
+  opacity: 1;
+}
+
+.tooltip {
+  position: absolute;
+  z-index: 10;
+  visibility: hidden;
+  background: #f9f6f2;
+  padding: 6px;
+  border: 1px solid #032535;
+  border-radius: 6px;
+}
+
+.dot {
+  stroke: darkblue;
+  stroke-width: 0.5;
+  opacity: 0.8;
+}
+
+.dot-doping {
+  fill: rgb(0, 68, 196);
+}
+
+.dot-no-doping {
+  fill: rgb(255, 136, 0);
+}
+
+.tick {
+  font-size: 0.5em;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.domain {
+  stroke: #000;
+  shape-rendering: crispEdges;
+  fill: none;
+}
+
+.legend {
+  font-size: 0.3em;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+.legend-rect-doping {
+  @extend .dot;
+  @extend .dot-doping;
+}
+.legend-rect-no-doping {
+  @extend .dot;
+  @extend .dot-no-doping;
+}
+
+.container {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+iframe {
+  width: 100%;
+  height: fit-content;
+  border: none;
+}
+
+.section-title {
+  margin-left: 42px;
+}

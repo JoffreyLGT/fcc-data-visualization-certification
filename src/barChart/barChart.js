@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import "./styles.css";
+import "../styles.scss";
 
 const canvas = {
   width: 500,
@@ -33,7 +33,7 @@ const drawXAxis = (g, xScale) =>
     .call(d3.axisBottom(xScale).tickFormat(d3.timeFormat("%Y")));
 
 /**
- * Draw the y axis to the bottom and add the ticks.
+ * Draw the y axis to the left and add the ticks.
  * @param {*} g container
  * @param {*} yScale to calculate the positions
  */
@@ -135,3 +135,5 @@ export const displayBarChart = () => {
       drawChart(data);
     });
 };
+
+displayBarChart();
