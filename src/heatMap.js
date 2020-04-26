@@ -1,10 +1,10 @@
 import * as d3 from "d3";
 
 const canvas = {
-  width: 500,
+  width: 400,
   height: 250,
 };
-const margin = { top: 20, right: 20, bottom: 20, left: 40 };
+const margin = { top: 40, right: 20, bottom: 20, left: 40 };
 
 const monthNames = [
   "",
@@ -49,14 +49,42 @@ const drawYAxis = (g, yScale) =>
         .tickSizeOuter(0)
     );
 
+/**
+ * Draw the title of the map.
+ * @param {*} g
+ */
+const drawTitle = (g) =>
+  g
+    .append("text")
+    .attr("id", "title")
+    .attr("class", "title")
+    .attr("x", canvas.width / 2)
+    .attr("y", margin.top / 3)
+    .attr("text-anchor", "middle")
+    .text("Monthly Global Land-Surface Temperature");
+
+/**
+ * Draw the description of the map.
+ * @param {*} g
+ */
+const drawDescription = (g, min, max, base) =>
+  g
+    .append("text")
+    .attr("id", "description")
+    .attr("class", "description")
+    .attr("x", canvas.width / 2)
+    .attr("y", margin.top - margin.top / 3)
+    .attr("text-anchor", "middle")
+    .text(`${min} - ${max}: base temperature ${base}°C`);
+
+/**
+ * Draw the chart in the element with the id heatMap.
+ * @param {*} data
+ */
 const drawChart = (data) => {
   const xDomain = [
     d3.min(data.monthlyVariance, (data) => data.year),
     d3.max(data.monthlyVariance, (data) => data.year),
-  ];
-  const yDomain = [
-    d3.min(data.monthlyVariance, (data) => data.temperature),
-    d3.max(data.monthlyVariance, (data) => data.temperature),
   ];
 
   const xScale = d3
@@ -73,6 +101,13 @@ const drawChart = (data) => {
     .append("svg")
     .attr("viewBox", `0 0 ${canvas.width} ${canvas.height}`);
 
+  drawTitle(svg.append("g"));
+  drawDescription(
+    svg.append("g"),
+    xDomain[0],
+    xDomain[1],
+    data.baseTemperature
+  );
   drawXAxis(svg.append("g"), xScale);
   drawYAxis(svg.append("g"), yScale);
 };
