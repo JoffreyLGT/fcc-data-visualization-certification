@@ -1,11 +1,13 @@
 import "./styles.scss";
 import { displayBarChart } from "./barChart";
 import { displayScatterplotGraph } from "./scatterplotGraph";
+import { displayHeatMap } from "./heatMap";
 
 const projects = [
   [0, "all"],
   [1, "barChart"],
   [2, "scatterplotGraph"],
+  [3, "heatMap"],
 ];
 
 const removeGraphContainerContent = () => {
@@ -34,9 +36,14 @@ const displayGraph = (id) => {
       displayScatterplotGraph();
       document.getElementById(id).style.display = "block";
       break;
+    case 3:
+      displayHeatMap();
+      document.getElementById(id).style.display = "block";
+      break;
     default:
       displayBarChart();
       displayScatterplotGraph();
+      displayHeatMap();
       displayContainers("block");
   }
 };
