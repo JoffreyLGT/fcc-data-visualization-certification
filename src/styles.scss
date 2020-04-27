@@ -66,6 +66,13 @@
   display: none;
 }
 
+.axis text {
+  stroke-width: 0;
+  opacity: 1;
+  font-weight: 400;
+  stroke: #130f30;
+}
+
 body {
   font-family: sans-serif;
 }
