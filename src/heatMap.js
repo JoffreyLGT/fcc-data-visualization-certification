@@ -42,7 +42,12 @@ const drawXAxis = (g, xScale) =>
     .attr("id", "x-axis")
     .attr("class", "axis")
     .attr("transform", `translate(0,${canvas.height - margin.bottom})`)
-    .call(d3.axisBottom(xScale).tickFormat(d3.format("d")).tickSizeOuter(0));
+    .call(
+      d3
+        .axisBottom(xScale)
+        .tickValues(xScale.domain().filter((d, i) => !(i % 20))) // every 20 years
+        .tickSizeOuter(0)
+    );
 
 /**
  * Draw the y axis to the left and add the ticks.
@@ -103,8 +108,10 @@ const drawChart = (data) => {
   console.log(d3.max(data.monthlyVariance, (data) => data.temperature));
 
   const xScale = d3
-    .scaleLinear()
-    .domain(xDomain)
+    // .scaleLinear()
+    // .domain(xDomain)
+    .scaleBand()
+    .domain(data.monthlyVariance.map((variance) => variance.year))
     .range([margin.left, canvas.width - margin.right]);
   const yScale = d3
     .scaleBand()
@@ -140,10 +147,10 @@ const drawChart = (data) => {
         `${getFillColor(Number(d.temperature), Number(data.baseTemperature))}`
     )
     .attr("height", yScale.bandwidth())
-    .attr("width", (d) => rectWidth)
+    .attr("width", (d) => xScale.bandwidth())
     .attr("x", (d) => xScale(d.year))
     .attr("y", (d) => yScale(d.month))
-    .attr("data-month", (d) => d.month)
+    .attr("data-month", (d) => d.month - 1)
     .attr("data-year", (d) => d.year)
     .attr("data-temp", (d) => d.temperature);
 };
