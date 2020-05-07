@@ -1,10 +1,10 @@
 import * as d3 from "d3";
 
 const canvas = {
-  width: 400,
-  height: 250,
+  width: 500,
+  height: 300,
 };
-const margin = { top: 40, right: 20, bottom: 20, left: 40 };
+const margin = { top: 40, right: 20, bottom: 40, left: 40 };
 
 const monthNames = [
   "",
@@ -22,15 +22,20 @@ const monthNames = [
   "December",
 ];
 
-const getFillColor = (temperature, reference) => {
-  if (temperature >= reference - 1 && temperature <= reference + 1) {
-    return "#FFFDD0";
-  } else if (temperature > reference) {
-    return temperature < reference + 3 ? "#FDD0FF" : "#D690D9";
-  } else {
-    return temperature > reference - 3 ? "#D0D2FF" : "#9093D9";
-  }
-};
+const rectColors = [
+  "#6495ed",
+  "#8bafe6",
+  "#b1c9de",
+  "#d8e3d7",
+  "#fffdd0",
+  "#ffdeb0",
+  "#ffbe90",
+  "#ff9e70",
+  "#ff7f50",
+  "#FA8072",
+];
+
+const format2Digits = d3.format(".2f");
 
 /**
  * Draw the x axis to the bottom and add the ticks.
@@ -95,6 +100,72 @@ const drawDescription = (g, min, max, base) =>
     .text(`${min} - ${max}: base temperature ${base}°C`);
 
 /**
+ * Draw the legend in the g element.
+ * @param {*} g
+ * @param {*} range
+ * @returns the threshold created
+ */
+const drawLegend = (g, range) => {
+  // Note: this was drawn using this example
+  // https://bl.ocks.org/mbostock/4573883
+
+  const valuePerColor = (range[1] - range[0]) / (rectColors.length - 1);
+  let domain = [];
+  for (let i = 0; i < rectColors.length; i++) {
+    domain.push(range[0] + valuePerColor * i);
+  }
+
+  const threshold = d3.scaleThreshold().domain(domain).range(rectColors);
+
+  const legendXScale = d3
+    .scaleLinear()
+    .domain([range[0], range[1]])
+    .range([margin.left, canvas.width / 2]);
+
+  const yPosition = canvas.height - 20;
+
+  const xAxis = d3
+    .axisBottom(legendXScale)
+    .tickSize(8)
+    .tickValues(threshold.domain())
+    .tickFormat((d) => format2Digits(d));
+
+  g.attr("id", "legend");
+
+  // Draw the axis
+  g.attr("transform", `translate(0,${yPosition})`).call(xAxis);
+
+  // Remove the axis to keep only the ticks
+  g.select(".domain").remove();
+  // Draw each rectangle and fill them with their color
+  g.selectAll("rect")
+    .data(
+      threshold.range().map((color) => {
+        var d = threshold.invertExtent(color);
+        if (d[0] == null) d[0] = legendXScale.domain()[0];
+        if (d[1] == null) d[1] = legendXScale.domain()[1];
+        return d;
+      })
+    )
+    .enter()
+    .insert("rect", ".tick")
+    .attr("height", 8)
+    .attr("x", (d) => legendXScale(d[0]))
+    .attr("width", (d) => legendXScale(d[1]) - legendXScale(d[0]))
+    .attr("fill", (d) => threshold(d[0]))
+    .attr("stroke", "black")
+    .attr("stroke-width", ".5");
+
+  g.append("text")
+    .attr("fill", "#000")
+    .attr("font-weight", "bold")
+    .attr("text-anchor", "start")
+    .attr("y", yPosition);
+
+  return threshold;
+};
+
+/**
  * Draw the chart in the element with the id heatMap.
  * @param {*} data
  */
@@ -104,12 +175,12 @@ const drawChart = (data) => {
     d3.max(data.monthlyVariance, (data) => data.year),
   ];
 
-  console.log(d3.min(data.monthlyVariance, (data) => data.temperature));
-  console.log(d3.max(data.monthlyVariance, (data) => data.temperature));
+  const legendRange = [
+    d3.min(data.monthlyVariance, (data) => data.temperature),
+    d3.max(data.monthlyVariance, (data) => data.temperature),
+  ];
 
   const xScale = d3
-    // .scaleLinear()
-    // .domain(xDomain)
     .scaleBand()
     .domain(data.monthlyVariance.map((variance) => variance.year))
     .range([margin.left, canvas.width - margin.right]);
@@ -133,7 +204,8 @@ const drawChart = (data) => {
   drawXAxis(svg.append("g"), xScale);
   drawYAxis(svg.append("g"), yScale);
 
-  const rectWidth = canvas.width / (xDomain[1] - xDomain[0]);
+  const threshold = drawLegend(svg.append("g"), legendRange);
+
   svg
     .append("g")
     .selectAll("rect")
@@ -141,11 +213,7 @@ const drawChart = (data) => {
     .enter()
     .append("rect")
     .attr("class", "cell")
-    .attr(
-      "fill",
-      (d) =>
-        `${getFillColor(Number(d.temperature), Number(data.baseTemperature))}`
-    )
+    .attr("fill", (d, i) => threshold(d.temperature))
     .attr("height", yScale.bandwidth())
     .attr("width", (d) => xScale.bandwidth())
     .attr("x", (d) => xScale(d.year))
