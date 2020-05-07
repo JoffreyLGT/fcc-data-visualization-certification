@@ -170,6 +170,15 @@ const drawLegend = (g, range) => {
  * @param {*} data
  */
 const drawChart = (data) => {
+  // Create the tooltip div inside and append it to the main div.
+  // It has an absolute value and will be positionned next to the
+  // cursor on top of the chart.
+  const tooltip = d3
+    .select("#heatMap")
+    .append("div")
+    .attr("id", "tooltip")
+    .attr("class", "tooltip centered");
+
   const xDomain = [
     d3.min(data.monthlyVariance, (data) => data.year),
     d3.max(data.monthlyVariance, (data) => data.year),
@@ -220,7 +229,30 @@ const drawChart = (data) => {
     .attr("y", (d) => yScale(d.month))
     .attr("data-month", (d) => d.month - 1)
     .attr("data-year", (d) => d.year)
-    .attr("data-temp", (d) => d.temperature);
+    .attr("data-temp", (d) => d.temperature)
+
+    // As explained next to the tooltip creation, we have to set
+    // the div coordinates to have them next to the cursor and
+    // hide it when we mouse out.
+    .on("mouseover", (d) => {
+      const varianceSign =
+        Math.sign(d.variance) === 1
+          ? "+"
+          : Math.sign(d.variance) === -1
+          ? "-"
+          : "";
+      tooltip.html(`${d.year} - ${monthNames[d.month]}<br />
+      ${format2Digits(d.temperature)}°C<br/>
+      ${varianceSign}${format2Digits(Math.abs(d.variance))}°C`);
+      tooltip.attr("data-year", d.year);
+      tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", () => {
+      tooltip
+        .style("top", d3.event.pageY - 10 + "px")
+        .style("left", d3.event.pageX + 10 + "px");
+    })
+    .on("mouseout", () => tooltip.style("visibility", "hidden"));
 };
 
 /**
