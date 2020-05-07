@@ -50,7 +50,7 @@ const drawXAxis = (g, xScale) =>
     .call(
       d3
         .axisBottom(xScale)
-        .tickValues(xScale.domain().filter((d, i) => !(i % 20))) // every 20 years
+        .tickValues(xScale.domain().filter((d, i) => d % 10 === 0)) // every years divisible by 10
         .tickSizeOuter(0)
     );
 
@@ -192,7 +192,8 @@ const drawChart = (data) => {
   const xScale = d3
     .scaleBand()
     .domain(data.monthlyVariance.map((variance) => variance.year))
-    .range([margin.left, canvas.width - margin.right]);
+    .range([margin.left + 1, canvas.width - margin.right]);
+
   const yScale = d3
     .scaleBand()
     .domain(data.monthlyVariance.map((variance) => variance.month))
